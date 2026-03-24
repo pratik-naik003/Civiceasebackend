@@ -11,8 +11,9 @@ class Location(BaseModel):
 
 
 class IssueCreate(BaseModel):
+    title: str = Field(min_length=3, max_length=255)
     description: str = Field(min_length=5, max_length=5000)
-    location: Location
+    location: Location | None = None
     photo_key: str | None = None
 
 
@@ -32,9 +33,10 @@ class IssueStatusUpdate(BaseModel):
 
 class IssueResponse(BaseModel):
     id: int
+    title: str | None = None
     description: str
-    latitude: float
-    longitude: float
+    latitude: float | None = None
+    longitude: float | None = None
     status: IssueStatusEnum
     priority_level: PriorityLevelEnum
     priority_score: float

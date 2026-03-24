@@ -20,6 +20,7 @@ router = APIRouter()
 def _to_issue_response(service: IssueService, issue: Issue) -> IssueResponse:
     return IssueResponse(
         id=issue.id,
+        title=issue.title,
         description=issue.description,
         latitude=issue.latitude,
         longitude=issue.longitude,
@@ -48,9 +49,10 @@ def create_issue(payload: IssueCreate, db: DbSession, user: User = Depends(requi
     service = IssueService(db)
     issue = service.create_issue(
         reporter_id=user.id,
+        title=payload.title,
         description=payload.description,
-        lat=payload.location.lat,
-        lng=payload.location.lng,
+        lat=payload.location.lat if payload.location else None,
+        lng=payload.location.lng if payload.location else None,
         photo_key=payload.photo_key,
     )
     return _to_issue_response(service, issue)

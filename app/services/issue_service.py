@@ -12,12 +12,13 @@ class IssueService:
         self.db = db
         self.storage = StorageService()
 
-    def create_issue(self, reporter_id: int, description: str, lat: float, lng: float, photo_key: str | None) -> Issue:
+    def create_issue(self, reporter_id: int, title: str, description: str, lat: float | None, lng: float | None, photo_key: str | None) -> Issue:
         issue = Issue(
             reporter_id=reporter_id,
+            title=title,
             description=description,
-            latitude=lat,
-            longitude=lng,
+            latitude=lat if lat is not None else 0.0,
+            longitude=lng if lng is not None else 0.0,
             status=IssueStatusEnum.OPEN.value,
             priority_level="p2",
             priority_score=0.5,
