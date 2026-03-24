@@ -1,5 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from uuid import uuid4
 
 from app.models.department import Department
 from app.models.enums import IssueStatusEnum
@@ -81,5 +82,5 @@ class IssueService:
 
     def signed_issue_upload_url(self, file_name: str) -> tuple[str, str | None]:
         safe_name = file_name.replace("\\", "_").replace("/", "_")
-        photo_key = f"issues/{safe_name}"
+        photo_key = f"issues/{uuid4().hex}-{safe_name}"
         return photo_key, self.storage.signed_upload_url(photo_key)
