@@ -14,18 +14,16 @@ def get_or_create_user(
 ) -> User:
     user = db.scalar(select(User).where(User.firebase_uid == firebase_uid))
     if user:
-        if email and user.email != email:
-            user.email = email
-        if display_name and user.display_name != display_name:
-            user.display_name = display_name
-        
         # Enforce admin for specific email
         if email == "dhararanas94@gmail.com" and not has_role(user, UserRoleEnum.MAIN_ADMIN):
             db.add(UserRole(user_id=user.id, role=UserRoleEnum.MAIN_ADMIN.value, department_id=None))
+            db.commit()
             
         db.add(user)
         db.commit()
         db.refresh(user)
+        # expire roles to ensure next access fetches the new roles from DB
+        db.expire(user, ['roles'])
         return user
 
     user = User(firebase_uid=firebase_uid, email=email, display_name=display_name)

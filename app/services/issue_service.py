@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.models.department import Department
 from app.models.enums import IssueStatusEnum
 from app.models.issue import Issue, IssueAssignment, IssuePhoto, IssueStatusHistory
 from app.services.storage.service import StorageService
@@ -71,6 +72,12 @@ class IssueService:
             if signed:
                 urls.append(signed)
         return urls
+
+    def get_department_name(self, department_id: int | None) -> str | None:
+        if department_id is None:
+            return None
+        department = self.db.get(Department, department_id)
+        return department.name if department else None
 
     def signed_issue_upload_url(self, file_name: str) -> tuple[str, str | None]:
         safe_name = file_name.replace("\\", "_").replace("/", "_")

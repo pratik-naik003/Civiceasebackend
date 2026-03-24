@@ -41,6 +41,9 @@ class IssueResponse(BaseModel):
     priority_level: PriorityLevelEnum
     priority_score: float
     department_id: int | None = None
+    department_name: str | None = None
+    assigned_person_id: int | None = None
+    assigned_person_name: str | None = None
     ai_routing_reason: str | None = None
     cluster_id: int | None = None
     photo_keys: list[str] = Field(default_factory=list)

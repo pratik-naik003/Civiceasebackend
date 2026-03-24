@@ -28,6 +28,9 @@ def _to_issue_response(service: IssueService, issue: Issue) -> IssueResponse:
         priority_level=issue.priority_level,
         priority_score=issue.priority_score,
         department_id=issue.department_id,
+        department_name=service.get_department_name(issue.department_id),
+        assigned_person_id=issue.assigned_person_id,
+        assigned_person_name=issue.assigned_person_name,
         ai_routing_reason=issue.ai_routing_reason,
         cluster_id=issue.cluster_id,
         photo_keys=service.get_issue_photo_keys(issue.id),
@@ -87,9 +90,9 @@ def update_issue_status(issue_id: int, payload: IssueStatusUpdate, db: DbSession
     if not issue:
         raise HTTPException(status_code=404, detail="Issue not found")
     if not issue.department_id:
-        raise HTTPException(status_code=400, detail="Issue has no assigned department")
-
-    require_department_admin(issue.department_id, user)
+        require_main_admin(user)
+    else:
+        require_department_admin(issue.department_id, user)
 
     if payload.status.value == "open":
         raise HTTPException(status_code=400, detail="Cannot move issue back to OPEN")

@@ -19,6 +19,8 @@ class Issue(Base):
     priority_level: Mapped[str] = mapped_column(String(8), index=True)
     priority_score: Mapped[float] = mapped_column(Float, default=0.5)
     department_id: Mapped[int | None] = mapped_column(ForeignKey("departments.id"), nullable=True, index=True)
+    assigned_person_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    assigned_person_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
     ai_routing_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_routing_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     ai_model_used: Mapped[str | None] = mapped_column(String(128), nullable=True)

@@ -8,6 +8,7 @@ from app.models.community import (
     CommunityPostVote,
 )
 from app.models.department import Department
+from app.models.department_person import DepartmentPerson
 from app.models.issue import Issue, IssueAssignment, IssuePhoto, IssueStatusHistory
 from app.models.resource import Resource
 from app.models.user import User, UserRole
@@ -17,6 +18,7 @@ __all__ = [
     "User",
     "UserRole",
     "Department",
+    "DepartmentPerson",
     "Issue",
     "IssuePhoto",
     "IssueAssignment",
