@@ -21,3 +21,14 @@ class UserRoleResponse(BaseModel):
     department_id: int | None = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserMeResponse(BaseModel):
+    id: int
+    firebase_uid: str
+    email: str | None = None
+    display_name: str | None = None
+    created_at: datetime
+    roles: list[UserRoleResponse]
+
+    model_config = ConfigDict(from_attributes=True)

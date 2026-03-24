@@ -16,6 +16,15 @@ class IssueCreate(BaseModel):
     photo_key: str | None = None
 
 
+class IssueImageUploadRequest(BaseModel):
+    file_name: str
+
+
+class IssueImageUploadResponse(BaseModel):
+    photo_key: str
+    signed_upload_url: str | None = None
+
+
 class IssueStatusUpdate(BaseModel):
     status: IssueStatusEnum
     note: str | None = None
@@ -32,6 +41,8 @@ class IssueResponse(BaseModel):
     department_id: int | None = None
     ai_routing_reason: str | None = None
     cluster_id: int | None = None
+    photo_keys: list[str] = Field(default_factory=list)
+    photo_urls: list[str] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
 

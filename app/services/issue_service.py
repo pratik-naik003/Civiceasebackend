@@ -3,12 +3,14 @@ from sqlalchemy.orm import Session
 
 from app.models.enums import IssueStatusEnum
 from app.models.issue import Issue, IssueAssignment, IssuePhoto, IssueStatusHistory
+from app.services.storage.service import StorageService
 from app.services.ai.workflow import AIWorkflow
 
 
 class IssueService:
     def __init__(self, db: Session) -> None:
         self.db = db
+        self.storage = StorageService()
 
     def create_issue(self, reporter_id: int, description: str, lat: float, lng: float, photo_key: str | None) -> Issue:
         issue = Issue(
@@ -56,3 +58,20 @@ class IssueService:
 
     def list_user_issues(self, reporter_id: int) -> list[Issue]:
         return self.db.scalars(select(Issue).where(Issue.reporter_id == reporter_id).order_by(Issue.created_at.desc())).all()
+
+    def get_issue_photo_keys(self, issue_id: int) -> list[str]:
+        rows = self.db.scalars(select(IssuePhoto).where(IssuePhoto.issue_id == issue_id)).all()
+        return [row.photo_key for row in rows]
+
+    def get_issue_photo_urls(self, issue_id: int) -> list[str]:
+        urls: list[str] = []
+        for key in self.get_issue_photo_keys(issue_id):
+            signed = self.storage.signed_photo_url(key)
+            if signed:
+                urls.append(signed)
+        return urls
+
+    def signed_issue_upload_url(self, file_name: str) -> tuple[str, str | None]:
+        safe_name = file_name.replace("\\", "_").replace("/", "_")
+        photo_key = f"issues/{safe_name}"
+        return photo_key, self.storage.signed_upload_url(photo_key)

@@ -14,6 +14,11 @@ class Settings(BaseSettings):
 
     firebase_project_id: str | None = Field(default=None, alias="FIREBASE_PROJECT_ID")
     firebase_credentials_path: str | None = Field(default=None, alias="FIREBASE_CREDENTIALS_PATH")
+    firebase_private_key_id: str | None = Field(default=None, alias="FIREBASE_PRIVATE_KEY_ID")
+    firebase_private_key: str | None = Field(default=None, alias="FIREBASE_PRIVATE_KEY")
+    firebase_client_email: str | None = Field(default=None, alias="FIREBASE_CLIENT_EMAIL")
+    firebase_client_id: str | None = Field(default=None, alias="FIREBASE_CLIENT_ID")
+    firebase_client_x509_cert_url: str | None = Field(default=None, alias="FIREBASE_CLIENT_X509_CERT_URL")
 
     cerebras_api_key: str | None = Field(default=None, alias="CEREBRAS_API_KEY")
     cerebras_model: str = Field(default="llama-4-scout-17b-16e-instruct", alias="CEREBRAS_MODEL")

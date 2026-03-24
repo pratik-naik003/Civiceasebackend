@@ -1,7 +1,10 @@
 import json
 from dataclasses import dataclass
 
-from langchain.prompts import ChatPromptTemplate
+try:
+    from langchain_core.prompts import ChatPromptTemplate
+except ImportError:  # Backward compatibility for older LangChain releases
+    from langchain.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field, ValidationError
 
 from app.services.ai.cerebras_client import CerebrasClient
