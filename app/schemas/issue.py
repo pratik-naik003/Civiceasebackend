@@ -1,4 +1,4 @@
-from datetime import datetime
+﻿from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -31,6 +31,11 @@ class IssueStatusUpdate(BaseModel):
     note: str | None = None
 
 
+class EmployeeIssueCompleteRequest(BaseModel):
+    photo_key: str = Field(min_length=3)
+    note: str | None = Field(default=None, max_length=2000)
+
+
 class IssueResponse(BaseModel):
     id: int
     title: str | None = None
@@ -48,6 +53,11 @@ class IssueResponse(BaseModel):
     cluster_id: int | None = None
     photo_keys: list[str] = Field(default_factory=list)
     photo_urls: list[str] = Field(default_factory=list)
+    resolution_photo_key: str | None = None
+    resolution_photo_url: str | None = None
+    resolution_note: str | None = None
+    resolved_by_user_id: int | None = None
+    resolved_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
 

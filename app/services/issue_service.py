@@ -1,4 +1,4 @@
-from sqlalchemy import select
+﻿from sqlalchemy import select
 from sqlalchemy.orm import Session
 from uuid import uuid4
 
@@ -74,6 +74,11 @@ class IssueService:
                 urls.append(signed)
         return urls
 
+    def get_photo_url(self, photo_key: str | None) -> str | None:
+        if not photo_key:
+            return None
+        return self.storage.signed_photo_url(photo_key)
+
     def get_department_name(self, department_id: int | None) -> str | None:
         if department_id is None:
             return None
@@ -83,4 +88,9 @@ class IssueService:
     def signed_issue_upload_url(self, file_name: str) -> tuple[str, str | None]:
         safe_name = file_name.replace("\\", "_").replace("/", "_")
         photo_key = f"issues/{uuid4().hex}-{safe_name}"
+        return photo_key, self.storage.signed_upload_url(photo_key)
+
+    def signed_issue_resolution_upload_url(self, file_name: str) -> tuple[str, str | None]:
+        safe_name = file_name.replace("\\", "_").replace("/", "_")
+        photo_key = f"issue-resolution/{uuid4().hex}-{safe_name}"
         return photo_key, self.storage.signed_upload_url(photo_key)

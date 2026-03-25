@@ -1,9 +1,10 @@
-import enum
+﻿import enum
 
 
 class UserRoleEnum(str, enum.Enum):
     MAIN_ADMIN = "org_main_admin"
     DEPARTMENT_ADMIN = "department_admin"
+    DEPARTMENT_EMPLOYEE = "department_employee"
     REPORTER = "reporter"
 
 

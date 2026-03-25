@@ -1,4 +1,4 @@
-from datetime import datetime
+﻿from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -21,6 +21,10 @@ class Issue(Base):
     department_id: Mapped[int | None] = mapped_column(ForeignKey("departments.id"), nullable=True, index=True)
     assigned_person_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
     assigned_person_name: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    resolution_photo_key: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    resolution_note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    resolved_by_user_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     ai_routing_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_routing_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     ai_model_used: Mapped[str | None] = mapped_column(String(128), nullable=True)

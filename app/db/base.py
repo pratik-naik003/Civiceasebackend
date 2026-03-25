@@ -1,4 +1,5 @@
-from app.models.base import Base
+﻿from app.models.base import Base
+from app.models.chatbot import ChatMessage, ChatSession
 from app.models.cluster import ClusterMember, IssueCluster
 from app.models.community import (
     CommunityComment,
@@ -23,6 +24,8 @@ __all__ = [
     "IssuePhoto",
     "IssueAssignment",
     "IssueStatusHistory",
+    "ChatSession",
+    "ChatMessage",
     "IssueCluster",
     "ClusterMember",
     "CommunityPost",

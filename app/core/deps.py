@@ -1,4 +1,4 @@
-from typing import Annotated
+﻿from typing import Annotated
 
 from fastapi import Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
@@ -54,6 +54,12 @@ def require_main_admin(user: CurrentUser) -> User:
 def require_reporter(user: CurrentUser) -> User:
     if not has_role(user, UserRoleEnum.REPORTER):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Reporter role required")
+    return user
+
+
+def require_department_employee(user: CurrentUser) -> User:
+    if not has_role(user, UserRoleEnum.DEPARTMENT_EMPLOYEE):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Department employee role required")
     return user
 
 

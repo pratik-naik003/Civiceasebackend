@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+﻿from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 
 from app.core.deps import DbSession, get_current_user, require_department_admin, require_main_admin, require_reporter
@@ -35,6 +35,11 @@ def _to_issue_response(service: IssueService, issue: Issue) -> IssueResponse:
         cluster_id=issue.cluster_id,
         photo_keys=service.get_issue_photo_keys(issue.id),
         photo_urls=service.get_issue_photo_urls(issue.id),
+        resolution_photo_key=issue.resolution_photo_key,
+        resolution_photo_url=service.get_photo_url(issue.resolution_photo_key),
+        resolution_note=issue.resolution_note,
+        resolved_by_user_id=issue.resolved_by_user_id,
+        resolved_at=issue.resolved_at,
         created_at=issue.created_at,
         updated_at=issue.updated_at,
     )
