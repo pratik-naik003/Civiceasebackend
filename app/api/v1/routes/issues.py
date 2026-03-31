@@ -1,4 +1,5 @@
-﻿from fastapi import APIRouter, Depends, HTTPException, Query, status
+from datetime import datetime
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 
 from app.core.deps import DbSession, get_current_user, require_department_admin, require_main_admin, require_reporter
@@ -102,7 +103,15 @@ def update_issue_status(issue_id: int, payload: IssueStatusUpdate, db: DbSession
     if payload.status.value == "open":
         raise HTTPException(status_code=400, detail="Cannot move issue back to OPEN")
 
-    issue.status = payload.status.value
+    next_status = payload.status.value
+    issue.status = next_status
+    if next_status == "resolved":
+        issue.resolved_by_user_id = user.id
+        issue.resolved_at = datetime.utcnow()
+    elif next_status != "resolved":
+        issue.resolved_by_user_id = None
+        issue.resolved_at = None
+
     db.add(issue)
     db.add(IssueStatusHistory(issue_id=issue.id, status=issue.status, updated_by_user_id=user.id, note=payload.note))
     db.commit()

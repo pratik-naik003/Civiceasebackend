@@ -11,6 +11,7 @@ class UserRoleEnum(str, enum.Enum):
 class IssueStatusEnum(str, enum.Enum):
     OPEN = "open"
     IN_PROGRESS = "in_progress"
+    PENDING_REVIEW = "pending_review"
     RESOLVED = "resolved"
 
 

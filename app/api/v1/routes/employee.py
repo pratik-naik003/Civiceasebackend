@@ -1,6 +1,4 @@
-﻿from datetime import datetime
-
-from fastapi import APIRouter, Depends, HTTPException, status
+﻿from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func, select
 
 from app.core.deps import DbSession, require_department_employee
@@ -152,19 +150,21 @@ def complete_employee_issue(
     issue = _get_employee_issue_or_404(db, user, issue_id)
     if issue.status == IssueStatusEnum.RESOLVED.value:
         raise HTTPException(status_code=400, detail="Issue is already resolved")
+    if issue.status == IssueStatusEnum.PENDING_REVIEW.value:
+        raise HTTPException(status_code=400, detail="Issue is already awaiting department review")
 
-    issue.status = IssueStatusEnum.RESOLVED.value
+    issue.status = IssueStatusEnum.PENDING_REVIEW.value
     issue.resolution_photo_key = payload.photo_key
     issue.resolution_note = payload.note.strip() if payload.note else None
-    issue.resolved_by_user_id = user.id
-    issue.resolved_at = datetime.utcnow()
+    issue.resolved_by_user_id = None
+    issue.resolved_at = None
     db.add(issue)
     db.add(
         IssueStatusHistory(
             issue_id=issue.id,
-            status=IssueStatusEnum.RESOLVED.value,
+            status=IssueStatusEnum.PENDING_REVIEW.value,
             updated_by_user_id=user.id,
-            note=issue.resolution_note or "Resolved by assigned employee",
+            note=issue.resolution_note or "Completion proof submitted for department review",
         )
     )
     db.commit()
